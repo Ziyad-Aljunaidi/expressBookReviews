@@ -53,6 +53,7 @@ regd_users.post("/login", (req,res) => {
 regd_users.put("/auth/review/:isbn", (req, res) => {
   //Write your code here
   const isbn = req.params.isbn;
+  const review = req.body.review
   const book = books[isbn]
   const booksReviews = books[isbn].reviews
   const username = req.session.authorization.username
@@ -63,10 +64,10 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         }
     }
   }else{
-   book[reviews][username] = {
+   book.reviews[username] = {
         review:req.body.review
     }
-    books[isbn]["reviews"]['review'] = review
+    books[isbn].reviews[username].review= review
   }
 
   

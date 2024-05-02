@@ -55,11 +55,10 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
   const review = req.body.review
   const book = books[isbn]
-  const booksReviews = books[isbn].reviews
   const username = req.session.authorization.username
   if(books[isbn].reviews > 0){
-    if(book.review[username].length > 0){
-        book[reviews][username] = {
+    if(book.reviews[username].length > 0){
+        book.reviews[username] = {
             review:req.body.review
         }
     }
@@ -68,11 +67,29 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
         review:req.body.review
     }
     books[isbn].reviews[username].review= review
+    console.log("hehe")
   }
 
   
-  return res.status(300).json({message: "Yet to be implemented"});
+  return res.status(200).json({message: "Your review is added"});
 });
+
+regd_users.delete("/auth/review/:isbn", (req, res) =>{
+    const isbn = req.params.isbn;
+    const username = req.session.authorization.username
+    const reviews = books[isbn].reviews
+
+    try {
+        delete books[isbn].reviews[username]
+        console.log(books[isbn].reviews[username])
+    } catch (error) {
+        console.log(error)
+        return res.status(403).json({message: "you don't have any reviews on this Book"})
+       
+    }
+    return res.status(200).json({message: ` your review is now deleted`, reviews:reviews})
+    // ${books[isbn].reviews[username]}
+})
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;

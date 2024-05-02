@@ -3,7 +3,19 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios').default;
 
+// const getBooks = async() =>{
+//     try {
+//         // console.log("hge")
+//         await axios.get("/").then((res) =>{
+//             console.log(res)
+//         })
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+// getBooks();
 
 public_users.post("/register", (req,res) => {
   //Write your code here
@@ -23,7 +35,7 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
   //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+  return res.send(JSON.stringify(books,null,4))
 });
 
 // Get book details based on ISBN
@@ -76,4 +88,50 @@ public_users.get('/review/:isbn',function (req, res) {
   return res.send(JSON.stringify(books[isbn].reviews,null,4))
 });
 
-module.exports.general = public_users;
+
+const url = "http://localhost:5000/";
+const getBooks = async() =>{
+    try {
+        await axios.get(url).then((res) =>{
+            console.log(JSON.stringify(res.data))
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getBooksByISBN = async(isbn) => {
+    try {
+        await axios.get(url+"isbn/"+isbn).then((res) =>{
+            console.log(JSON.stringify(res.data))
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getBooksByAuthor = async(author) => {
+    try {
+        await axios.get(url+"author/"+author).then((res) =>{
+            console.log(JSON.stringify(res.data))
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+const getBooksByTitle = async(title) => {
+    try {
+        await axios.get(url+"title/"+title).then((res) =>{
+            console.log(JSON.stringify(res.data))
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+getBooks();
+getBooksByISBN(5)
+getBooksByAuthor("Chinua Achebe");
+getBooksByTitle("The Divine Comedy");
+module.exports.general =  public_users;
